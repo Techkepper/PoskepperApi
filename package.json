@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "npm run lint && npx tsx --watch ./src/index.ts",
+    "start": "npx tsx --watch ./src/index.ts",
     "build": "npx tsc",
     "clean": "rimraf dist",
     "test": "jest",
