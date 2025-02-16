@@ -56,7 +56,6 @@ export class AuthController {
       }
     } catch (error) {
       const err = error as Error
-      console.log(process.env.DATABASE_URL)
       return res.status(500).json({
         error: 'Error interno del servidor', message: err.message, // Include the error message
         stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
