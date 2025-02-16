@@ -1,0 +1,239 @@
+openapi: 3.0.0
+tags:
+  - name: Productos
+    description: Operaciones relacionaas con productos
+paths:
+  /productos:
+    get:
+      tags:
+        - Productos
+      summary: Obtiene todos los productos con 
+      responses:
+        200:
+          description: Listado de productos 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idProducto:
+                      type: integer
+                      example: 1
+                    fechaCreacion:
+                      type: string
+                      example: 2024-06-26T20:57:28.523Z
+                    nombre:
+                      type: string
+                      example: Producto A
+                    descripcion:
+                      type: string
+                      example: Descripción del Producto A
+                    idCategoria:
+                      type: integer
+                      example: 1
+                    precio:
+                      type: number
+                      example: 100
+                    cantidad:
+                      type: integer
+                      example: 10
+                    comentario:
+                      type: string
+                      example: Comentario del producto
+                    nombreCategoria:
+                      type: string
+                      example: Producto
+                    totalProductos:
+                      type: integer
+                      example: 1
+                    imagenUrl:
+                      type: string
+                      example: http://localhost:3000/api/productos/imagen/146
+        400:
+          description: Error en los parámetros de paginación
+        404:
+          description: No se encontraron productos
+        500:
+          description: Error interno del servidor
+
+  /productos/registrar:
+    post:
+      tags:
+        - Productos
+      summary: Registra un nuevo producto
+      description: Recuerda que para registrar un producto en el sistema es necesario que todos los datos esten llenos.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Producto A
+                descripcion:
+                  type: string
+                  example: Descripción del Producto A
+                idCategoria:
+                  type: integer
+                  example: 1
+                precio:
+                  type: number
+                  example: 100
+                cantidad:
+                  type: integer
+                  example: 10
+                estado:
+                  type: boolean
+                  example: true
+                comentario:
+                  type: string
+                  example: Comentario del producto
+                foto:
+                  type: string
+                  format: binary
+              required:
+                - nombre
+                - descripcion
+                - idCategoria
+                - precio
+                - cantidad
+                - estado
+                - foto
+      responses:
+        200:
+          description: Producto registrado exitosamente
+        400:
+          description: Error en los datos proporcionados
+        500:
+          description: Error interno del servidor  
+
+  /productos/{id}:
+    get: 
+      tags:
+        - Productos
+      summary: Obtiene un producto por id
+      parameters:
+        - name: id
+          in: path
+          requestBody: true
+          description: ID del producto
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Datos del producto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idProducto:
+                    type: integer
+                    example: 1
+                  fechaCreacion:
+                    type: string
+                    example: 2024-06-26T20:57:28.523Z
+                  nombre:
+                    type: string
+                    example: Producto A
+                  descripcion:
+                    type: string
+                    example: Descripción del Producto A
+                  idCategoria:
+                    type: integer
+                    example: 1
+                  precio:
+                    type: number
+                    example: 100
+                  cantidad:
+                    type: integer
+                    example: 10
+                  comentario:
+                    type: string
+                    example: Comentario del producto
+                  nombreCategoria:
+                    type: string
+                    example: Producto
+                  totalProductos:
+                    type: integer
+                    example: 1
+                  imagenUrl:
+                    type: string
+                    example: http://localhost:3000/api/productos/imagen/146
+        404:
+          description: Producto no encontrado
+        500:
+          description: Error interno del servidor
+    put:
+      tags:
+        - Productos
+      summary: Actualiza un producto por ID
+      description: Recuerda que para actualizar un producto en el sistema es necesario que todos los datos esten llenos y que el idcategoria se divide en 2 tipos Producto(1) y Plato(2)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Producto A
+                descripcion:
+                  type: string
+                  example: Descripción del Producto A
+                idCategoria:
+                  type: integer
+                  example: 1
+                precio:
+                  type: number
+                  example: 100
+                cantidad:
+                  type: integer
+                  example: 10
+                estado:
+                  type: boolean
+                  example: true
+                comentario:
+                  type: string
+                  example: Comentario del producto
+                foto:
+                  type: string
+                  format: binary
+              required: []
+      responses:
+        200:
+          description: Producto actualizado
+        404:
+          description: Producto no encontrado
+        500:
+          description: Error interno del servidor
+    delete:
+      tags:
+        - Productos
+      summary: Elimina un producto por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del producto
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Producto eliminado
+        404:
+          description: Producto no encontrado
+        500:
+          description: Error interno del servidor           

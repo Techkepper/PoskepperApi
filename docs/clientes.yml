@@ -1,0 +1,293 @@
+openapi: 3.0.0
+tags:
+  - name: Clientes
+    description: Operaciones relacionadas con clientes
+paths:
+  /clientes:
+    get:
+      tags:
+        - Clientes
+      summary: Obtiene el listado de clientes
+      responses:
+        200:
+          description: Listado de clientes 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idCliente:
+                      type: integer
+                      example: 1
+                    fechaCreacion:
+                      type: string
+                      example: 2024-06-28 21:02:37.7033333
+                    cedula:
+                      type: string
+                      example: 111111111
+                    nombre:
+                      type: string
+                      example: Juan
+                    apellidos:
+                      type: string
+                      example: Perez
+                    correoElectronico:
+                      type: string
+                      example: juanPerez@gmail.com
+                    telefono:
+                      type: string
+                      example: 111111111
+                    direccion:
+                      type: string
+                      example: Calle 1
+                    comentario:
+                      type: string
+                      example: Comentario
+                    estado:
+                      type: boolean
+                      example: true
+                    totalClientes:
+                      type: integer
+                      example: 1
+        404:
+          description: No se encontraron clientes
+        
+        500:
+           description: Error interno del servidor
+           
+
+  /clientes/registrar:
+    post:
+      tags:
+        - Clientes
+      summary: Registra un cliente
+      description: Recuerda que para registrar un cliente en el sistema es necesario que todos los datos esten llenos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cedula:
+                  type: string
+                nombre:
+                  type: string
+                apellidos:
+                  type: string
+                correoElectronico:
+                  type: string
+                  format: email
+                telefono:
+                  type: integer
+                direccion:
+                  type: string
+                comentario:
+                  type: string
+                estado:
+                  type: boolean
+                  example: true
+      responses:
+        201:
+          description: Cliente registrado correctamente
+         
+        400:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      vacios:
+                        type: string
+                        example: Todos los campos son requeridos para registrar un cliente.
+                    cedulaFormato:
+                      type: string
+                      example: La cédula debe tener 7 o 9 dígitos
+                    correoFormato:
+                      type: string
+                      example: El correo electrónico debe tener el siguiente formato nombre@ejemplo.com
+                    telefonoFormato:
+                      type: string
+                      example: El teléfono debe tener 8 dígitos
+                    existe:
+                      type: string
+                      example: La cédula del cliente ya esta en uso.
+                    correoExiste:
+                      type: string
+                      example: El correo electrónico del cliente ya esta en uso.
+        500:
+          description: Error interno del servidor
+          
+
+  /clientes/{id}:
+    get:
+      tags:
+        - Clientes
+      summary: Obtiene un cliente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del cliente
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Datos del cliente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idCliente:
+                    type: integer
+                    example: 1
+                  fechaCreacion:
+                    type: string
+                    example: 2024-06-28 21:02:37.7033333
+                  cedula:
+                    type: string
+                    example: 111111111
+                  nombre:
+                    type: string
+                    example: Juan
+                  apellidos:
+                    type: string
+                    example: Perez
+                  correoElectronico:
+                    type: string
+                    example: juanPerez@gmail.com
+                  telefono:
+                    type: string
+                    example: 111111111
+                  direccion:
+                    type: string
+                    example: Calle 1
+                  comentario:
+                    type: string
+                    example: Comentario
+                  estado:
+                    type: boolean
+                    example: true
+        400:
+          description: La identificación debe ser un número
+          
+        404:
+           description: No se encontro el cliente.
+       
+        500:
+          description: Error interno del servidor
+    put:
+      tags:
+        - Clientes
+      summary: Actualiza una mesa por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la mesa
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    cedula:
+                      type: string
+                    nombre:
+                      type: string
+                    apellidos:
+                      type: string
+                    correoElectronico:
+                      type: string
+                      format: email
+                    telefono:
+                      type: integer
+                    direccion:
+                      type: string
+                    comentario:
+                      type: string
+                    estado:
+                      type: boolean
+                      example: true
+                  required:
+                    - cedula
+                    - nombre
+                    - apellidos
+                    - correoElectronico
+                    - telefono
+                    - direccion
+                    - comentario
+                    - estado
+            examples:
+              cliente_completo:
+                value:
+                  cedula: 111111111
+                  nombre: Juan
+                  apellidos: Perez
+                  correoElectronico: juanP@gmail.com
+                  telefono: 111111111
+                  direccion: Calle 1
+                  comentario: Comentario
+                  estado: true
+              cliente_incompleto:
+                value:
+                  nombre: Juan
+      responses:
+        200:
+          description: Cliente actualizado correctamente
+        400:
+          description: El ID de la mesa debe ser un número entero válido.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      idCliente:
+                        type: string
+                        example: La identificación debe ser un número entero válido
+                      correoFormato:
+                        type: string
+                        example: El correo electrónico debe tener el siguiente formato nombre@ejemplo.com
+                      cedula:
+                        type: string
+                        example: La cedula del cliente ya está en uso
+                      correo:
+                        type: string
+                        example: El correo electrónico ya está en uso
+        404:
+          description: No se encontró el cliente con el ID proporcionado
+          
+        500:
+          description: Error interno del servidor
+
+    delete:
+      tags:
+        - Clientes
+      summary: Elimina un cliente por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del cliente
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Cliente eliminado correctamente
+        400:
+          description: La identificación debe ser un número entero válido
+        404:
+          description: No se encontró el cliente con el ID proporcionado               
+        500:
+          description: Error interno del servidor

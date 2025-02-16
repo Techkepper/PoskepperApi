@@ -1,0 +1,143 @@
+openapi: 3.0.0
+tags:
+  - name: Autenticación
+    description: Operaciones relacionadas con autenticación
+paths:
+  /auth/iniciar-sesion:
+    post:
+      tags:
+        - Autenticación
+      summary: Inicia sesión con un usuario existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombreUsuario:
+                  type: string
+                  description: Nombre de usuario
+                contrasenna:
+                  type: string
+                  description: Contraseña
+              required:
+                - nombreUsuario
+                - contrasenna
+      responses:
+        200:
+          description: Inicio de sesión exitoso
+        400:
+          description: Nombre de usuario y contraseña son requeridos
+        401:
+          description: Nombre de usuario o contraseña incorrectos
+        500:
+          description: Error interno del servidor
+  /auth/mi-perfil:
+    get:
+      tags:
+        - Autenticación
+      summary: Obtiene el perfil del usuario autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Datos del perfil del usuario
+        404:
+          description: Usuario no encontrado
+        500:
+          description: Error interno del servidor
+  /auth/cerrar-sesion:
+    post:
+      tags:
+        - Autenticación
+      summary: Cierra la sesión del usuario autenticado
+      responses:
+        200:
+          description: Sesión cerrada
+        500:
+          description: Error interno del servidor
+  /auth/solicitar-token-recuperacion:
+    post:
+      tags:
+        - Autenticación
+      summary: Solicita un token para recuperar la contraseña
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                correo:
+                  type: string
+                  description: Correo del usuario
+              required:
+                - correo
+      responses:
+        200:
+          description: Código de recuperación enviado
+        400:
+          description: El correo es requerido
+        404:
+          description: Correo no encontrado
+        500:
+          description: Error interno del servidor
+  /auth/verificar-token:
+    post:
+      tags:
+        - Autenticación
+      summary: Verifica si el token de recuperación es válido
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                correo:
+                  type: string
+                  description: Correo del usuario
+                token:
+                  type: string
+                  description: Token de recuperación
+              required:
+                - correo
+                - token
+      responses:
+        200:
+          description: Código válido
+        400:
+          description: Correo y token son requeridos
+        401:
+          description: Código incorrecto o expirado
+        500:
+          description: Error interno del servidor
+  /auth/cambiar-contrasenna:
+    post:
+      tags:
+        - Autenticación
+      summary: Cambia la contraseña del usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                correo:
+                  type: string
+                  description: Correo del usuario
+                nuevaContrasenna:
+                  type: string
+                  description: Nueva contraseña
+              required:
+                - correo
+                - nuevaContrasenna
+      responses:
+        200:
+          description: Contraseña cambiada exitosamente
+        400:
+          description: Correo y nueva contraseña son requeridos
+        500:
+          description: Error interno del servidor

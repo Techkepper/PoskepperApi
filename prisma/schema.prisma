@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Rol {
+  idRol       Int       @id @default(autoincrement())
+  descripcion String
+  estado      Boolean
+  usuarios    Usuario[]
+}
+
+model Usuario {
+  idUsuario       Int       @id @default(autoincrement())
+  fechaIngreso    DateTime
+  nombre          String
+  apellidos       String
+  nombreUsuario   String    @unique
+  contrasenna     String
+  idRol           Int
+  comentarios     String    @default("No hay comentarios")
+  estado          Boolean
+  correo          String    @unique
+  token           String?
+  tokenExpiracion DateTime?
+  rol             Rol       @relation(fields: [idRol], references: [idRol])
+  ordenes         Orden[]
+}
+
+model Categoria {
+  idCategoria Int        @id @default(autoincrement())
+  descripcion String
+  estado      Boolean
+  productos   Producto[]
+}
+
+model Producto {
+  idProducto    Int            @id @default(autoincrement())
+  fechaCreacion DateTime
+  nombre        String
+  descripcion   String
+  foto          String
+  idCategoria   Int
+  precio        Int
+  cantidad      Int
+  comentario    String
+  estado        Boolean
+  cantidadVieja Int
+  categoria     Categoria      @relation(fields: [idCategoria], references: [idCategoria])
+  detalleOrden  DetalleOrden[]
+  mermas        Merma[]
+}
+
+model Cliente {
+  idCliente         Int      @id @default(autoincrement())
+  fechaCreacion     DateTime
+  cedula            BigInt
+  nombre            String
+  apellidos         String
+  correoElectronico String
+  telefono          BigInt
+  direccion         String
+  comentario        String
+  estado            Boolean
+  ordenes           Orden[]
+}
+
+model Orden {
+  idOrden      Int            @id @default(autoincrement())
+  fechaOrden   DateTime
+  idUsuario    Int
+  idCliente    Int
+  idMesa       Int
+  comentario   String
+  estado       String
+  usuario      Usuario        @relation(fields: [idUsuario], references: [idUsuario])
+  cliente      Cliente        @relation(fields: [idCliente], references: [idCliente])
+  mesa         Mesa           @relation(fields: [idMesa], references: [idMesa])
+  detalleOrden DetalleOrden[]
+  facturas     Factura[]
+}
+
+model DetalleOrden {
+  idDetalleOrden Int      @id @default(autoincrement())
+  idOrden        Int
+  idProducto     Int
+  cantidad       Int
+  comentario     String
+  precioUnitario Float
+  total          Float
+  estado         Boolean
+  orden          Orden    @relation(fields: [idOrden], references: [idOrden])
+  producto       Producto @relation(fields: [idProducto], references: [idProducto])
+}
+
+model Factura {
+  idFactura           Int          @id @default(autoincrement())
+  idOrden             Int
+  fecha               DateTime
+  metodoPago          Int
+  subtotal            Float
+  impuesto            Float
+  total               Float
+  estadoFactura       Boolean
+  orden               Orden        @relation(fields: [idOrden], references: [idOrden])
+  MetodosPago         MetodosPago? @relation(fields: [metodosPagoIdMetodo], references: [idMetodo])
+  metodosPagoIdMetodo Int?
+}
+
+model Mesa {
+  idMesa  Int     @id @default(autoincrement())
+  nombre  String
+  estado  Boolean
+  ordenes Orden[]
+}
+
+model Merma {
+  idMerma       Int         @id @default(autoincrement())
+  idProducto    Int
+  cantidad      Int
+  fecha         DateTime
+  comentario    String
+  estado        Boolean
+  idEstadoMerma Int
+  producto      Producto    @relation(fields: [idProducto], references: [idProducto])
+  estadoMerma   EstadoMerma @relation(fields: [idEstadoMerma], references: [idEstadoMerma])
+}
+
+model EstadoMerma {
+  idEstadoMerma Int     @id @default(autoincrement())
+  descripcion   String
+  mermas        Merma[]
+}
+
+model MetodosPago {
+  idMetodo    Int       @id @default(autoincrement())
+  descripcion String
+  estado      Boolean
+  facturas    Factura[]
+}

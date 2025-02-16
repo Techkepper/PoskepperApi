@@ -1,0 +1,179 @@
+openapi: 3.0.0
+tags:
+  - name: Mesas
+    description: Operaciones relacionadas con mesas
+paths:
+  /mesas:
+    get:
+      tags:
+        - Mesas
+      summary: Obtiene el listado de mesas
+      responses:
+        200:
+          description: Listado de mesas 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idMesa:
+                      type: integer
+                      example: 1
+                    nombre:
+                      type: string
+                      example: Mesa 1
+                    estado:
+                      type: string
+                      example: 1
+                    estadoMesa:
+                      type: string
+                      example: Disponible
+                    totalMesas:
+                      type: integer
+                      example: 1
+        404:
+          description: No se encontraron mesas
+        
+        500:
+           description: Error interno del servidor
+           
+
+  /mesas/registrar:
+    post:
+      tags:
+        - Mesas
+      summary: Registra una mesa
+      description: Recuerda que para registrar una mesa en el sistema es necesario que todos los datos esten llenos y que el Estado se divide en 2 tipos Disponible(1) y Ocupada(2)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Mesa 1
+                estado:
+                  type: string
+                  example: 1
+      responses:
+        201:
+          description: Mesa registrada correctamente
+         
+        400:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      vacios:
+                        type: string
+                        example: Todos los campos son requeridos para registrar una mesa.
+                      existe:
+                        type: string
+                        example: Ya existe una mesa con ese nombre
+        500:
+          description: Error interno del servidor
+          
+
+  /mesas/{id}:
+    put:
+      tags:
+        - Mesas
+      summary: Actualiza una mesa por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la mesa
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    nombre:
+                      type: string
+                      example: Mesa 1
+                    estado:
+                      type: integer
+                      example: 1
+                  required:
+                    - nombre
+                    - estado
+            examples:
+              mesa_completo:
+                value:
+                  nombre: Mesa 1
+                  estado: 1
+              usuario_incompleto:
+                value:
+                  nombre: Mesa 1
+      responses:
+        200:
+          description: Mesa actualizada correctamente
+        400:
+          description: El ID de la mesa debe ser un número entero válido.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      formatoID:
+                        type: string
+                        example: La identificación debe ser un número entero válido
+                      existe:
+                        type: string
+                        example: Ya existe una mesa con el nombre proporcionado
+                      fallida:
+                        type: string
+                        example: No se pudo actualizar la mesa seleccionada
+        404:
+          description: No se encontró la mesa con la identificación proporcionada
+          
+        500:
+          description: Error interno del servidor
+
+    delete:
+      tags:
+        - Mesas
+      summary: Elimina un mesa por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la mesa
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Mesa eliminada correctamente
+        400:
+          description: El ID de la mesa debe ser un número entero válido.
+        404:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      idMesa:
+                        type: string
+                        example: No se encontró la mesa con la identificación proporcionada
+                      eliminado:
+                        type: string
+                        example: No se pudo eliminar la mesa seleccionada
+        500:
+          description: Error interno del servidor

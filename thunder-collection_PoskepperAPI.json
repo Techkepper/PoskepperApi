@@ -1,0 +1,60 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "PoskepperAPI",
+    "collectionId": "e3ab3ecf-042f-4486-b7f2-83d2275edb69",
+    "dateExported": "2024-05-19T02:28:58.544Z",
+    "version": "1.2",
+    "folders": [
+        {
+            "_id": "015779e0-1c44-414b-be9f-df12700a82de",
+            "name": "usuarios",
+            "containerId": "",
+            "created": "2024-05-18T23:00:21.784Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "562ce17a-10a3-43cb-9f47-0605a7fd2df3",
+            "name": "auth",
+            "containerId": "",
+            "created": "2024-05-19T00:25:18.453Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "6bff9541-3c35-495e-b095-be1624668532",
+            "colId": "e3ab3ecf-042f-4486-b7f2-83d2275edb69",
+            "containerId": "015779e0-1c44-414b-be9f-df12700a82de",
+            "name": "registrar",
+            "url": "http://localhost:3000/api/usuarios/registrar",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-05-18T23:01:48.740Z",
+            "modified": "2024-05-19T02:23:37.241Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nombreUsuario\": \"test1239\",\n  \"contrasenna\": \"joe123\",\n  \"nombre\": \"test\",\n  \"apellidos\": \"test\",\n  \"idRol\": 1,\n  \"comentarios\": \"test comments\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "36a15a07-f882-415d-8b89-7994a2d30519",
+            "colId": "e3ab3ecf-042f-4486-b7f2-83d2275edb69",
+            "containerId": "562ce17a-10a3-43cb-9f47-0605a7fd2df3",
+            "name": "iniciar-sesion",
+            "url": "http://localhost:3000/api/auth/iniciar-sesion",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-05-19T00:25:42.829Z",
+            "modified": "2024-05-19T02:19:46.166Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"nombreUsuario\": \"joe\",\n  \"contrasenna\": \"joe23\"\n}\n",
+                "form": []
+            }
+        }
+    ],
+    "ref": "vFg8yLquSZiM6f2RMPx0Jsd2Eg41C8ZUXNVy6eDjiYtFKeCif9u1r-xQ7Zei-kGonefwBApKOXiVffB9j48whA"
+}

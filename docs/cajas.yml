@@ -1,0 +1,202 @@
+openapi: 3.0.0
+tags:
+  - name: Cajas
+    description: Operaciones relacionadas con cajas
+paths:
+  /cajas:
+    get:
+      tags:
+        - Cajas
+      summary: Obtiene el listado de cajas
+      responses:
+        200:
+          description: Listado de cajas 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idCaja:
+                      type: integer
+                      example: 1
+                    nombre:
+                      type: string
+                      example: Caja 1
+                    montoApertura:
+                      type: integer
+                      example: 1
+                    montoCierre:
+                      type: integer
+                      example: Disponible
+                    estaAsignada:
+                      type: integer
+                      example: 1
+                    estaAsignadaMsj:
+                      type: string
+                      example: Disponible
+                    totalMesas:
+                      type: integer
+                      example: 1
+        404:
+          description: No se encontraron cajas
+        
+        500:
+           description: Error interno del servidor
+           
+
+  /cajas/registrar:
+    post:
+      tags:
+        - Cajas
+      summary: Registra una caja
+      description: Recuerda que para registrar una caja en el sistema es necesario que todos los datos esten llenos y que estaAsignada se divide en 2 tipos Si(1) y No(2)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  example: Caja 1
+                montoApertura:
+                  type: integer
+                  example: 1000
+                montoCierre:
+                  type: integer
+                  example: 0
+                estaAsignada:
+                  type: string
+                  example: 1
+      responses:
+        201:
+          description: Caja registrada correctamente
+         
+        400:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      vacios:
+                        type: string
+                        example: Todos los campos son requeridos para registrar una caja.
+                      montoApertura:
+                        type: string
+                        example: El monto de apertura debe ser un número positivo sin decimales.
+                      montoCierre:
+                        type: string
+                        example: El monto de cierre debe ser un número positivo sin decimales.
+                      existe:
+                        type: string
+                        example: Ya existe una caja con el nombre proporcionado.
+        500:
+          description: Error interno del servidor
+          
+
+  /cajas/{id}:
+    put:
+      tags:
+        - Cajas
+      summary: Actualiza una caja por ID
+      description: Recuerda que para actualizar una caja en el sistema puedes digitar todos los datos o solamente los que deseas actualizar y que el estaAsignada se divide en 2 tipos Si(1) y No(2)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la caja
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    nombre:
+                      type: string
+                      example: Caja 1
+                    estaAsignada:
+                      type: integer
+                      example: 1
+                  required:
+                    - nombre
+                    - estaAsignada
+            examples:
+              caja_completa:
+                value:
+                  nombre: Caja
+                  estaAsignada: 1
+              caja_incompleto:
+                value:
+                  nombre: Caja
+      responses:
+        200:
+          description: Caja eliminada correctamente
+        400:
+          description: El ID de la caja debe ser un número entero válido.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      formatoID:
+                        type: string
+                        example: La identificación debe ser un número entero válido
+                      montos:
+                        type: string
+                        example: Los montos deben ser un número positivo sin decimales.
+                      existe:
+                        type: string
+                        example: Ya existe una caja con el nombre proporcionado
+                      fallida:
+                        type: string
+                        example: No se pudo actualizar la caja seleccionada
+                      
+        404:
+          description: No se encontró la caja con la identificación proporcionada
+          
+        500:
+          description: Error interno del servidor
+
+    delete:
+      tags:
+        - Cajas
+      summary: Elimina una caja por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID de la caja
+          schema:
+            type: integer
+
+      responses:
+        200:
+          description: Caja eliminada correctamente
+        400:
+          description: El ID de la caja debe ser un número entero válido.
+        404:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      idCaja:
+                        type: string
+                        example: No se encontró la caja con la identificación proporcionada
+                      eliminado:
+                        type: string
+                        example: No se pudo eliminar la caja seleccionada
+        500:
+          description: Error interno del servidor

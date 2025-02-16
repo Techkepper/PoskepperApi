@@ -1,0 +1,311 @@
+openapi: 3.0.0
+tags:
+  - name: Usuarios
+    description: Operaciones relacionadas con usuarios
+paths:
+  /usuarios:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene el listado de usuarios 
+      responses:
+        200:
+          description: Listado de usuarios 
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idUsuario:
+                      type: integer
+                      example: 1
+                    nombreUsuario:
+                      type: string
+                      example: juanito
+                    nombre:
+                      type: string
+                      example: Juan
+                    apellido:
+                      type: string
+                      example: Pérez
+                    fechaIngreso:
+                      type: string
+                      example: 2024-06-23T21:04:59.316Z
+                    nombreRol:
+                      type: string
+                      example: Administrador
+                    comentarios:
+                      type: string
+                      example: Usuario activo
+                    correo:
+                      type: string
+                      example: juanPerez@gmial.com
+                    totalUsuarios:
+                      type: integer
+                      example: 1
+        404:
+          description: No se encontraron usuarios
+        
+        500:
+           description: Error interno del servidor
+           
+
+  /usuarios/registrar:
+    post:
+      tags:
+        - Usuarios
+      summary: Registra un usuario
+      description: Recuerda que para registrar un usuario en el sistema es necesario que todos los datos esten llenos y que el Rol se divide en 4 tipos de usuario Administrador(1), Cocinero(2), Mesero(3) y Cajero(4)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombreUsuario:
+                  type: string
+                  example: juanito
+                nombre:
+                  type: string
+                  example: Juan
+                apellidos:
+                  type: string
+                  example: Pérez
+                contrasenna:
+                  type: string
+                  example: 1234abcd
+                idRol:
+                  type: integer
+                  example: 1
+                comentarios:
+                  type: string
+                  example: Usuario activo
+                correo:
+                  type: string
+                  example: juanitoPerez@gmail.com
+                estado:
+                  type: boolean
+                  example: true
+      responses:
+        201:
+          description: Usuario registrado correctamente
+         
+        400:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      vacios:
+                        type: string
+                        example: Todos los campos son requeridos para registrar un usuario.
+                      contrasenna:
+                        type: string
+                        example: La contraseña debe tener al menos 4 letras y 4 números en cualquier orden
+                      usuarioExistente:
+                        type: string
+                        example: El nombre de usuario ya esta en uso.
+                      correo:
+                        type: string
+                        example: El correo electrónico debe tener el siguiente formato nombre@ejemplo.com
+                      correoExistente:
+                        type: string
+                        example: El correo electrónico ya esta en uso.
+        500:
+          description: Error interno del servidor
+          
+
+  /usuarios/{id}:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene un usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Datos del usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idUsuario:
+                    type: integer
+                    example: 1
+                  fechaIngreso:
+                    type: string
+                    example: 2024-06-23T21:04:59.316Z
+                  nombre:
+                    type: string
+                    example: Juan
+                  apellidos:
+                    type: string
+                    example: Pérez
+                  nombreUsuario:
+                    type: string
+                    example: juanito
+                  correo:
+                    type: string
+                    example: juanPerez@gmail.com
+                  comentarios:
+                    type: string
+                    example: Usuario activo
+                  nombreRol:
+                    type: string
+                    example: Administrador
+                  estado:
+                    type: string
+                    example: true
+        400:
+          description: La identificación debe ser un número
+          
+        404:
+           description: Usuario no encontrado
+       
+        500:
+          description: Error interno del servidor
+          
+    put:
+      tags:
+        - Usuarios
+      summary: Actualiza un usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  properties:
+                    nombre:
+                      type: string
+                      example: Juan
+                    apellidos:
+                      type: string
+                      example: Pérez
+                    nombreUsuario:
+                      type: string
+                      example: juanito
+                    correo:
+                      type: string
+                      example: juanPerez@gmail.com
+                    comentarios:
+                      type: string
+                      example: Usuario activo
+                    idRol:
+                      type: integer
+                      example: 1
+                    estado:
+                      type: boolean
+                      example: true
+                  required:
+                    - nombre
+                    - apellidos
+                    - nombreUsuario
+                    - correo
+                    - comentarios
+                    - idRol
+                    - estado
+            examples:
+              usuario_completo:
+                value:
+                  nombre: Juan
+                  apellidos: Pérez
+                  nombreUsuario: juanito
+                  correo: juanPerez@gmail.com
+                  comentarios: Usuario activo
+                  idRol: 1
+                  estado: true
+              usuario_incompleto:
+                value:
+                  nombre: Juan
+      responses:
+        200:
+          description: Usuario actualizado
+        400:
+          description: Error en los datos proporcionados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      idUsuario:
+                        type: string
+                        example: El ID de usuario debe ser un número entero válido.
+                      correo:
+                        type: string
+                        example: El correo electrónico debe tener el siguiente formato nombre@ejemplo.com
+                      nombreUsuario:
+                        type: string
+                        example: El nombre de usuario ya está en uso.
+                      correoExistente:
+                        type: string
+                        example: El correo electrónico ya está en uso.
+        404:
+          description: No se encontró el usuario con el ID proporcionado.
+        500:
+          description: Error interno del servidor
+
+    delete:
+      tags:
+        - Usuarios
+      summary: Elimina un usuario por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Usuario eliminado correctamente.
+        400:
+          description: El ID de usuario debe ser un número entero válido.
+        404:
+          description: No se encontró el usuario con el ID proporcionado
+        500:
+          description: Error interno del servidor.
+
+  /usuarios/roles:
+    get:
+      tags:
+        - Usuarios
+      summary: Obtiene los roles de usuario
+      responses:
+        200:
+          description: Listado de roles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idRol:
+                    type: integer
+                    example: 1
+                  descripcion:
+                    type: string
+                    example: Administrador
+        404:
+          description: No se encontraron roles de usuario
+        500:
+          description: Error interno del servidor

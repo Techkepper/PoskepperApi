@@ -1,0 +1,7 @@
+@api = http://localhost:3000/api/productos
+
+#Obter los usuarios
+GET {{api}}?page=1&pageSize=1
+
+###
+# POST {{api}}/registrar -> usar un rest client para probar este endpoint

@@ -1,0 +1,34 @@
+@api = http://localhost:3000/api/usuarios
+
+#Obter los usuarios
+GET {{api}}/?page=1&pageSize=1
+
+###
+POST {{api}}/registrar
+Content-Type: application/json
+
+{
+  "nombreUsuario": "usuario28",
+  "contrasenna": "123456",
+  "nombre": "Usuario",
+  "apellidos": "Uno",
+  "idRol": 1,
+  "comentarios": "Usuario de prueba",
+  "correo": "anibal.alpizar14@gmail.com"
+}
+
+###
+GET {{api}}/22
+
+###
+PUT {{api}}/22
+Content-Type: application/json
+
+{
+  "comentarios": "Usuario de prueba actualizado"
+} 
+
+###
+#Eliminar un usuario
+DELETE {{api}}/19
+
