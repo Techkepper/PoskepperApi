@@ -54,7 +54,7 @@ export class AuthController {
         return res.status(500).json({ error: 'Error interno del servidor' })
       }
     } catch (error) {
-      return res.status(500).json({ error: 'Error interno del servidor' })
+      return res.status(500).json({ error })
     }
   }
 
